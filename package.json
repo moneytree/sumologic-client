@@ -1,0 +1,57 @@
+{
+  "name": "@moneytree/sumologic-client",
+  "version": "0.0.5",
+  "description": "JavaScript client for SumoLogic Search Job API",
+  "license": "ISC",
+  "repository": "moneytree/sumologic-client",
+  "main": "index.js",
+  "author": {
+    "name": "Vadim Burlakin",
+    "email": "vburlakin@moneytree.jp"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "test": "jest --runInBand",
+    "coverage": "npm test -- --coverage",
+    "postcoverage": "open-cli coverage/lcov-report/index.html",
+    "lint": "eslint .",
+    "docs": "documentation readme src --section=API",
+    "postdocs": "git add README.md",
+    "prerelease": "npm run lint && npm test",
+    "release": "standard-version"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "keywords": [
+    "sumologic",
+    "moneytree"
+  ],
+  "dependencies": {
+    "axios": "0.19.0",
+    "debug": "4.1.1",
+    "moment": "2.24.0",
+    "moment-timezone": "0.5.26"
+  },
+  "devDependencies": {
+    "@moneytree/eslint-config": "0.4.3",
+    "documentation": "11.0.1",
+    "eslint": "6.0.0",
+    "husky": "2.4.1",
+    "jest": "24.8.0",
+    "lint-staged": "8.2.1",
+    "nock": "10.0.6",
+    "open-cli": "5.0.0",
+    "standard-version": "6.0.1"
+  }
+}
