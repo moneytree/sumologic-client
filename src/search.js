@@ -93,7 +93,7 @@ class Search {
 
       if (response.status >= 400) {
         log(`got ${response.status} from server, failing immediately`);
-        const error = new Error('A 4xx response from Sumologic API. Debug the' +
+        const error = new Error('A 4xx response from Sumo Logic API. Debug the' +
                                 'attached `response` object for reference.');
         error.response = response;
         throw error;

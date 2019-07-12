@@ -1,16 +1,16 @@
 # sumologic-client
 
-A JavaScript client for SumoLogic APIs.
+A JavaScript client for Sumo Logic APIs.
 
 ## Requirements
 
-This library requires **NodeJS 10+** as it uses async iterators to stream chunks of data from Sumologic backend (see example below).
+This library requires **NodeJS 10+** as it uses async iterators to stream chunks of data from Sumo Logic backend (see example below).
 
 ## Features
 
 Only Search Job API is supported at the moment. Supported features:
 
--   Streams search results as they are gathered by Sumologic backend.
+-   Streams search results as they are gathered by Sumo Logic backend.
 -   Notifies you of state changes on the backend ("Search started" → "Gathering results" → "Finished").
 -   Handles "too many requests", and other errors on the backend.
 -   Cleans up properly after search is done.
@@ -28,9 +28,9 @@ $ npm install @moneytree/sumologic-client
 
 ## Prerequisites
 
-You will need to obtain Sumologic access keys to use this library. Both user level and admin level access keys will work.
+You will need to obtain Sumo Logic access keys to use this library. Both user level and admin level access keys will work.
 
-To create a user level access keys, go to your profile settings in Sumologic dashboard, and create a key in the *My Access Keys* section.
+To create a user level access keys, go to your profile settings in Sumo Logic dashboard, and create a key in the *My Access Keys* section.
 
 ## Sample Use
 
@@ -99,7 +99,7 @@ The config object passed to constructor can have the following options:
 
 Aside from features that are simply not yet implemented:
 
--  When using in the browser, there is no way to identify certain backend errors: such as 401 or 403. This is due to limitations of Sumologic backend: they will not return CORS headers for such responses, and browser will block these requests due to same-origin policy violation. This means that we can not check response status in the code, and API call will simply return to you as "Network Error".
+-  When using in the browser, there is no way to identify certain backend errors: such as 401 or 403. This is due to limitations of Sumo Logic backend: they will not return CORS headers for such responses, and browser will block these requests due to same-origin policy violation. This means that we can not check response status in the code, and API call will simply return to you as "Network Error".
 
 ## TODOs
 
