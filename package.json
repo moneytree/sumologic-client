@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@moneytree/eslint-config": "0.4.3",
-    "documentation": "11.0.1",
+    "documentation": "12.0.2",
     "eslint": "6.0.0",
     "husky": "2.4.1",
     "jest": "24.8.0",
