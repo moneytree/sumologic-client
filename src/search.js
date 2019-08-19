@@ -103,12 +103,20 @@ class Search {
     }
   }
 
-  async newSearchJob(queryParams) {
+  async newSearchJob(_queryParams) {
     log('newSearchJob');
 
-    queryParams.timeZone = queryParams.timeZone || this.config.timezone;
-    queryParams.from = moment(queryParams.from).tz(this.config.timezone).format();
-    queryParams.to = moment(queryParams.to).tz(this.config.timezone).format();
+    const queryParams = {
+      query: _queryParams.query
+    };
+
+    queryParams.from = moment(_queryParams.from).tz(this.config.timezone).format();
+    queryParams.to = moment(_queryParams.to).tz(this.config.timezone).format();
+    queryParams.timeZone = _queryParams.timeZone || this.config.timezone;
+
+    if (_queryParams.byReceiptTime === true || _queryParams.byReceiptTime === 'true') {
+      queryParams.byReceiptTime = 'true';
+    }
 
     const requestParams = {
       method: 'post',
