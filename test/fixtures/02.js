@@ -66,7 +66,7 @@ module.exports = [{
       }
     ],
     messageCount: 3,
-    recordCount: 0,
+    recordCount: 3,
     pendingWarnings: [],
     pendingErrors: []
   },

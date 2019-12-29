@@ -294,7 +294,7 @@ describe('search()', () => {
       from: '2019-06-25T10:14:31+09:00',
       to: '2019-06-25T17:14:31+09:00'
     };
-    const iterator = await client.getMessageIterator(searchParams);
+    const iterator = await client.getRecordIterator(searchParams);
     for await (const response of iterator) {
       expect(response.state).toEqual({
         state: 'DONE GATHERING RESULTS',
@@ -311,7 +311,7 @@ describe('search()', () => {
           }
         ],
         messageCount: 3,
-        recordCount: 0,
+        recordCount: 3,
         pendingWarnings: [],
         pendingErrors: []
       });
