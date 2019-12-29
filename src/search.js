@@ -148,12 +148,12 @@ class Search {
    * which case this method will return results gathered **so far**. If you call this while the
    * results are still being gathered, be sure to call this again with the corresponding offset.
    */
-  async getJobResults(id, offset = 0) {
+  async getJobResults(type, id, offset = 0) {
     log('getJobResults');
 
     const requestParams = {
       method: 'get',
-      url: `/search/jobs/${id}/messages?offset=${offset}&limit=${this.config.searchPageLimit}`
+      url: `/search/jobs/${id}/${type}s?offset=${offset}&limit=${this.config.searchPageLimit}`
     };
 
     const response = await this.request(requestParams);
@@ -176,7 +176,7 @@ class Search {
     this._nonce = new Object();
   }
 
-  async *getIterator(queryParams) {
+  async *_getIterator(type, queryParams) {
     const jobId = await this.newSearchJob(queryParams);
     let myNonce;
 
@@ -185,6 +185,7 @@ class Search {
 
     let resultsGatheredSoFar = 0;
     let state = null;
+    const countAttribute = `${type}Count`;
 
     while (true) {
       if (this._nonce !== myNonce) {
@@ -196,7 +197,7 @@ class Search {
       // refresh the state, unless already done gathering results:
       if (!(state && state.state === Search.STATE_DONE_GATHERING_RESULTS)) {
         state = await this.getJobState(jobId);
-        log(`state=${state.state}, cnt=${state.messageCount}`);
+        log(`state=${state.state}, cnt=${state[countAttribute]}`);
       }
 
       if (state.state === Search.STATE_NOT_STARTED) {
@@ -216,15 +217,15 @@ class Search {
         throw new Error('Search job has been force paused. This behavior is currently not supported.');
       }
 
-      const results = await this.getJobResults(jobId, resultsGatheredSoFar);
+      const results = await this.getJobResults(type, jobId, resultsGatheredSoFar);
 
       yield { state, results };
 
-      resultsGatheredSoFar += results.messages.length;
+      resultsGatheredSoFar += results[`${type}s`].length;
       log(`gathered so far: ${resultsGatheredSoFar}`);
 
       if (state.state === Search.STATE_DONE_GATHERING_RESULTS) {
-        if (state.messageCount === resultsGatheredSoFar) {
+        if (state[countAttribute] === resultsGatheredSoFar) {
           log('job done gathering results, and we downloaded everything; wrapping up');
           await this.deleteSearchJob(jobId);
           return;
@@ -235,6 +236,27 @@ class Search {
         await Search._wait(this.config.pollingDelay);
       }
     }
+  }
+
+
+  /**
+   * Gets message results gathered so far, from a given offset. This does not take the current job state
+   * into consideration. E.g. this method may be called when results are still being gathered, in
+   * which case this method will return results gathered **so far**. If you call this while the
+   * results are still being gathered, be sure to call this again with the corresponding offset.
+   */
+  async getMessageIterator(id, offset = 0) {
+    return await this._getIterator('message', id, offset);
+  }
+
+  /**
+   * Gets record results gathered so far, from a given offset. This does not take the current job state
+   * into consideration. E.g. this method may be called when results are still being gathered, in
+   * which case this method will return results gathered **so far**. If you call this while the
+   * results are still being gathered, be sure to call this again with the corresponding offset.
+   */
+  async getRecordIterator(id, offset = 0) {
+    return await this._getIterator('record', id, offset);
   }
 
   _getBasicAuthSecret() {
