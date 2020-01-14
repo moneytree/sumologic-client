@@ -138,7 +138,7 @@ describe('search()', () => {
     nock.restore();
   });
 
-  test('it works correctly', async () => {
+  test('it works to get messages correctly', async () => {
     // TODO
     // is there anything better than this?
     const requests = require('./fixtures/00.js');
@@ -157,7 +157,7 @@ describe('search()', () => {
       from: '2019-06-25T10:14:31+09:00',
       to: '2019-06-25T17:14:31+09:00'
     };
-    const iterator = await client.getIterator(searchParams);
+    const iterator = await client.getMessageIterator(searchParams);
     for await (const response of iterator) {
       expect(response.state).toEqual({
         state: 'DONE GATHERING RESULTS',
@@ -225,7 +225,7 @@ describe('search()', () => {
       to: '2019-06-25T17:14:31+09:00',
       byReceiptTime: true
     };
-    const iterator = await client.getIterator(searchParams);
+    const iterator = await client.getMessageIterator(searchParams);
     for await (const response of iterator) {
       expect(response.state).toEqual({
         state: 'DONE GATHERING RESULTS',
@@ -268,6 +268,78 @@ describe('search()', () => {
           {
             map: {
               msg: 'message3'
+            }
+          }
+        ]
+      });
+    }
+  });
+
+  test('it works to get records correctly', async () => {
+    // TODO
+    // is there anything better than this?
+    const requests = require('./fixtures/02.js');
+    requests.forEach((req) => {
+      const urlAndBody = [req.path];
+      if (req.method === 'POST') {
+        urlAndBody.push(JSON.stringify(req.body));
+      }
+      nock('https://api.jp.sumologic.com/')[req.method.toLowerCase()](...urlAndBody)
+        .reply(...[req.status, req.response]);
+    });
+
+    const client = createClient({ pollingDelay: 1 });
+    const searchParams = {
+      query: 'sample_query',
+      from: '2019-06-25T10:14:31+09:00',
+      to: '2019-06-25T17:14:31+09:00'
+    };
+    const iterator = await client.getRecordIterator(searchParams);
+    for await (const response of iterator) {
+      expect(response.state).toEqual({
+        state: 'DONE GATHERING RESULTS',
+        histogramBuckets: [
+          {
+            startTimestamp: 1561425300000,
+            length: 300000,
+            count: 576
+          },
+          {
+            startTimestamp: 1561425271000,
+            length: 29000,
+            count: 78
+          }
+        ],
+        messageCount: 3,
+        recordCount: 3,
+        pendingWarnings: [],
+        pendingErrors: []
+      });
+      expect(response.results).toEqual({
+        fields: [
+          {
+            name: 'sample-field',
+            fieldType: 'long',
+            keyField: false
+          }
+        ],
+        records: [
+          {
+            "map": {
+              "_count": "1",
+              "key": "aggregation key1",
+            }
+          },
+          {
+            "map": {
+              "_count": "2",
+              "key": "aggregation key2",
+            }
+          },
+          {
+            "map": {
+              "_count": "3",
+              "key": "aggregation key3",
             }
           }
         ]
