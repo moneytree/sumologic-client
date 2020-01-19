@@ -48,14 +48,14 @@ const { Search } = require('sumologic-client');
     to: '2019-06-25T17:14:31+09:00'
   };
 
-  const it = await client.getMessageIterator(searchParams);
+  const it = await client.getIterator(searchParams);
 
   for await (let response of it) {
       // check the latest backend state and total
       // number of results gathered so far:
       console.log(response.state);
 
-      // new search results since the last iteration:
+      // new search results since the last iteration: 
       console.log(response.results);
   }
 })();
