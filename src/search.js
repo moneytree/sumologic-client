@@ -1,6 +1,5 @@
 const axios = require('axios');
-const moment = require('moment');
-require('moment-timezone');
+const moment = require('moment-timezone');
 const debug = require('debug');
 
 const log = debug('sumologic-search');
