@@ -1,6 +1,6 @@
 {
   "name": "@moneytree/sumologic-client",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "JavaScript client for Sumo Logic Search Job API",
   "license": "ISC",
   "repository": "moneytree/sumologic-client",
@@ -38,20 +38,20 @@
     "moneytree"
   ],
   "dependencies": {
-    "axios": "0.19.0",
-    "debug": "4.1.1",
-    "moment": "2.24.0",
-    "moment-timezone": "0.5.26"
+    "axios": "0.19.2",
+    "debug": "4.3.1",
+    "moment": "2.29.1",
+    "moment-timezone": "0.5.33"
   },
   "devDependencies": {
-    "@moneytree/eslint-config": "0.4.3",
-    "documentation": "12.0.2",
-    "eslint": "6.0.0",
-    "husky": "2.4.1",
-    "jest": "24.8.0",
-    "lint-staged": "8.2.1",
-    "nock": "10.0.6",
-    "open-cli": "5.0.0",
-    "standard-version": "6.0.1"
+    "@moneytree/eslint-config": "0.4.4",
+    "documentation": "12.3.0",
+    "eslint": "6.8.0",
+    "husky": "2.7.0",
+    "jest": "24.9.0",
+    "lint-staged": "^8.2.1",
+    "nock": "^10.0.6",
+    "open-cli": "^5.0.0",
+    "standard-version": "^6.0.1"
   }
 }
