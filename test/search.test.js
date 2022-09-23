@@ -85,7 +85,7 @@ describe('request()', () => {
     await nock('https://api.jp.sumologic.com/api/v1/')
       .post('/search/jobs')
       .reply(code);
-    await expect(client.request(params)).rejects.toThrow(/A 4xx response from Sumo Logic API/);
+    await expect(client.request(params)).rejects.toThrow(/Got a 4[0-9]{2} response from Sumo Logic API/);
   });
 
   test('it will retry forever for 429 errors', async () => {
