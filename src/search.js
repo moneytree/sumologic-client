@@ -3,7 +3,6 @@ const moment = require('moment-timezone');
 const debug = require('debug');
 
 const log = debug('sumologic-search');
-
 class Search {
   get config() {
     return this._config;
@@ -72,28 +71,28 @@ class Search {
       // do not include CORS headers in case of non-2xx responses.
       if (response.status === 429 || response.status === 504) {
         // rate limit exceeded, or gateway timeout: always retry
-        log('got 429/504, retrying');
+        log(`got ${response.status}, retrying`);
         await Search._wait(this.config.retryDelay);
         continue;
       }
 
-      if (response.status === 500 || response.status === 503) {
-        // backend error, or service unavailable: retry
+      if (response.status === 500 || response.status === 503 || response.status === 400) {
+        // backend error, service unavailable: retry or generic error
         if (remainingRetries > 0) {
-          log('got 500/503, retrying');
+          log(`got ${response.status}, retrying`);
           await Search._wait(this.config.retryDelay);
           remainingRetries--;
           continue;
         } else {
-          log('ran out of retry attempts');
-          throw new Error('Exceeded retry count for 500/503 errors.');
+          log(`ran out of retry attempts for ${response.status}`);
+          throw new Error(`Exceeded retry count for ${response.status} errors`);
         }
       }
 
-      if (response.status >= 400) {
+      if (response.status > 400) {
         log(`got ${response.status} from server, failing immediately`);
-        const error = new Error('A 4xx response from Sumo Logic API. Debug the' +
-                                'attached `response` object for reference.');
+        const error = new Error(`Got a ${response.status} response from Sumo Logic API. ` +
+                                'Debug the attached `response` object for reference.');
         error.response = response;
         throw error;
       }
