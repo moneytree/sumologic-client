@@ -75,7 +75,7 @@ describe('request()', () => {
     await expect(client.request(params)).resolves.toHaveProperty('data', 'success');
   });
 
-  test.each([400, 401, 403])('it does not retry on %i', async (code) => {
+  test.each([401, 403])('it does not retry on %i', async (code) => {
     const client = createClient();
     const params = {
       method: 'post',
@@ -85,7 +85,7 @@ describe('request()', () => {
     await nock('https://api.jp.sumologic.com/api/v1/')
       .post('/search/jobs')
       .reply(code);
-    await expect(client.request(params)).rejects.toThrow(/A 4xx response from Sumo Logic API/);
+    await expect(client.request(params)).rejects.toThrow(/Got a 4[0-9]{2} response from Sumo Logic API/);
   });
 
   test('it will retry forever for 429 errors', async () => {
@@ -101,7 +101,7 @@ describe('request()', () => {
     await expect(client.request(params)).resolves.toHaveProperty('data', 'success');
   });
 
-  test.each([500, 503])('it succeeds before N retries on %i', async (code) => {
+  test.each([400, 500, 503])('it succeeds before N retries on %i', async (code) => {
     const retryCount = 3;
     const client = createClient({ retryDelay: 1, retryCount });
     const params = {
@@ -114,7 +114,7 @@ describe('request()', () => {
     await expect(client.request(params)).resolves.toHaveProperty('data', 'success');
   });
 
-  test.each([500, 503])('it fails after N retries on %i', async (code) => {
+  test.each([400, 500, 503])('it fails after N retries on %i', async (code) => {
     const retryCount = 3;
     const client = createClient({ retryDelay: 1, retryCount });
     const params = {
