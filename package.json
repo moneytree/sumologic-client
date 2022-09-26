@@ -1,6 +1,6 @@
 {
   "name": "@moneytree/sumologic-client",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "JavaScript client for Sumo Logic Search Job API",
   "license": "ISC",
   "repository": "moneytree/sumologic-client",
